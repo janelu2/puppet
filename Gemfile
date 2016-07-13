@@ -27,6 +27,7 @@ gem "puppet", :path => File.dirname(__FILE__), :require => false
 gem "facter", *location_for(ENV['FACTER_LOCATION'] || ['> 2.0', '< 4'])
 gem "hiera", *location_for(ENV['HIERA_LOCATION'] || ['>= 2.0', '< 4'])
 gem "rake", "10.1.1", :require => false
+gem 'hocon', :git => 'https://github.com/Iristyle/ruby-hocon.git', :branch => 'ticket/master/HC-82-parse-files-as-utf8-with-boms'
 
 group(:development, :test) do
   gem "rspec", "~> 3.1", :require => false
