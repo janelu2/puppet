@@ -1,0 +1,13 @@
+---
+:version: 4
+:hierarchy:
+  - :name: "second file is hocon"
+    :backend: hocon
+    :path: "second"
+  - :name: "first"
+    :backend: yaml
+  - :name:  'other datadir'
+    :backend: json
+    :datadir: "data2"
+    :path: "third"
+:datadir: "data1"

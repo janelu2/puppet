@@ -1,5 +1,6 @@
 require 'pathname'
 require 'puppet/pops/lookup/interpolation'
+require 'hocon'
 
 module Puppet::DataProviders
   class HieraConfig
@@ -58,12 +59,20 @@ module Puppet::DataProviders
     # @api public
     def initialize(config_root)
       @config_root = config_root
-      @config_path = config_root + 'hiera.yaml'
-      if @config_path.exist?
-        @config = validate_config(HieraConfig.symkeys_to_string(YAML.load_file(@config_path)))
+      config_path_hocon = config_root + 'hiera.conf'
+      config_path_yaml = config_root + 'hiera.yaml'
+      if config_path_hocon.exist?
+        @config = validate_config(Hocon.load(File.absolute_path(config_path_hocon)))
+        @config_path = config_path_hocon
+        @config['hierarchy'] ||= DEFAULT_CONFIG['hierarchy']
+        @config['datadir'] ||= DEFAULT_CONFIG['datadir']
+      elsif config_path_yaml.exist?
+        @config = validate_config(HieraConfig.symkeys_to_string(YAML.load_file(config_path_yaml)))
+        @config_path = config_path_yaml
         @config['hierarchy'] ||= DEFAULT_CONFIG['hierarchy']
         @config['datadir'] ||= DEFAULT_CONFIG['datadir']
       else
+        @config_path = config_path_yaml
         @config = DEFAULT_CONFIG
       end
       @version = @config['version']
